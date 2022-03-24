@@ -30,3 +30,5 @@ url_list.sort()
 with open('crawl_' + top_url_parse.netloc + '.txt', 'w') as f:
     for url in url_list:
         f.write(url + "\n")
+
+print("Crawler has finished. Run the archiver now!")

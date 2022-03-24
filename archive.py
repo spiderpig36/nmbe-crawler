@@ -30,3 +30,6 @@ for save_url in lines:
             print("saved: " + save_url)
             continue
         print("something went wrong: " + status_code + " " + save_url)
+        print("Retrying... If this message presits contact support")
+
+print("All items processed")
