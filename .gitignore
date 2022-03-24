@@ -1,3 +1,4 @@
 /.vscode
 /nmb
 *.txt
+!requirements.txt
