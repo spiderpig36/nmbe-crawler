@@ -29,7 +29,7 @@ for save_url in lines:
             f.write('\n'.join(lines))
             print("saved: " + save_url)
             continue
-        print("something went wrong: " + status_code + " " + save_url)
+        print("Something went wrong: " + str(status_code) + " " + save_url)
         print("Retrying... If this message presits contact support")
 
 print("All items processed")
