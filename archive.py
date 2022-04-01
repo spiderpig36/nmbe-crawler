@@ -1,6 +1,9 @@
 import sys
 from time import sleep
 import requests
+import re
+import json
+import time
 
 f = open(sys.argv[1], 'r')
 text = f.read()
@@ -22,14 +25,26 @@ for save_url in lines:
             sleep(int(retry_after))
             continue
         if status_code == 200:
-            finished = True
-            lines.remove(save_url)
-            f.seek(0)
-            f.truncate()
-            f.write('\n'.join(lines))
-            print("saved: " + save_url)
+            spn2 = re.search('spn.watchJob\("spn2-([\d\w]*)"', response.text).group(1)
+            pending = True
+            while pending:
+                spn2_response = requests.get("https://web.archive.org/save/status/spn2-" + spn2 + "?_t=" + str(time.time())).json()
+                if spn2_response["status"] != "pending":
+                    pending = False
+                    if spn2_response["status"] == "success":
+                        finished = True
+                        lines.remove(save_url)
+                        f.seek(0)
+                        f.truncate()
+                        f.write('\n'.join(lines))
+                        print("saved: " + save_url)
+                    else:
+                        print("not saved: " + save_url)
+                        print("reason: " + spn2_response["status"])
+                    continue
+                sleep(5)
             continue
-        print("Something went wrong: " + str(status_code) + " " + save_url)
+        print("Something went wrong with the request: " + str(status_code) + " " + save_url)
         print("Retrying... If this message presits contact support")
 
 print("All items processed")
