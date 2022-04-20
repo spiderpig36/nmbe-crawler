@@ -31,8 +31,8 @@ for save_url in lines:
                 spn2_response = requests.get("https://web.archive.org/save/status/spn2-" + spn2 + "?_t=" + str(time.time())).json()
                 if spn2_response["status"] != "pending":
                     pending = False
+                    finished = True
                     if spn2_response["status"] == "success":
-                        finished = True
                         lines.remove(save_url)
                         f.seek(0)
                         f.truncate()
@@ -40,7 +40,7 @@ for save_url in lines:
                         print("saved: " + save_url)
                     else:
                         print("not saved: " + save_url)
-                        print("reason: " + spn2_response["status"])
+                        print("reason: " + spn2_response["message"])
                     continue
                 sleep(5)
             continue
